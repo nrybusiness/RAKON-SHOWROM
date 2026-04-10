@@ -25,8 +25,15 @@ function doGet(e) {
 
   const route = ROUTES[app] || ROUTES['hub'];
 
-  return HtmlService
-    .createTemplateFromFile(route.file)
+  const template = HtmlService.createTemplateFromFile(route.file);
+
+  // Inyectamos la URL real de la Web App al template para que el frontend
+  // pueda construir enlaces correctos a los demos (?app=food, etc.)
+  // Esto resuelve el problema del iframe sandbox de GAS donde
+  // window.location no apunta a la URL pública real.
+  template.webAppUrl = ScriptApp.getService().getUrl();
+
+  return template
     .evaluate()
     .setTitle(route.title)
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL)
@@ -47,9 +54,10 @@ function include(filename) {
  */
 function getRakonConfig() {
   return {
-    brand:    RAKON_CONFIG.BRAND,
-    whatsapp: RAKON_CONFIG.WHATSAPP_NUMBER,
-    pricing:  RAKON_CONFIG.PRICING_PUBLIC,
-    urls:     RAKON_CONFIG.DEMO_URLS
+    brand:     RAKON_CONFIG.BRAND,
+    whatsapp:  RAKON_CONFIG.WHATSAPP_NUMBER,
+    pricing:   RAKON_CONFIG.PRICING_PUBLIC,
+    urls:      RAKON_CONFIG.DEMO_URLS,
+    webAppUrl: ScriptApp.getService().getUrl()
   };
 }

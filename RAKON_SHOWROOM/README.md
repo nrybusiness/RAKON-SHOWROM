@@ -1,6 +1,12 @@
-# RAKON SHOWROOM v1.0
+# RAKON SHOWROOM v1.1
 
 Suite modular de mockups comerciales para **Rakon Technology**, desplegable como Web App única en Google Apps Script.
+
+## ⚡ Cambios v1.1 (parche iframe sandbox)
+
+- `Code.gs` ahora inyecta `template.webAppUrl = ScriptApp.getService().getUrl()` para que el frontend conozca la URL pública real.
+- `HubView.html` y `FoodView.html` leen `window.RAKON_WEBAPP_URL` en lugar de `window.location.pathname`.
+- Esto resuelve el bug donde los enlaces entre Hub y demos no abrían nada por estar dentro del iframe sandbox de GAS.
 
 ## Estructura del Repositorio
 

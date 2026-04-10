@@ -10,6 +10,11 @@
   <?!= include('FoodData'); ?>
   <?!= include('FoodLogic'); ?>
 
+  <!-- Inyección de la URL real de la Web App desde Code.gs -->
+  <script>
+    window.RAKON_WEBAPP_URL = "<?= webAppUrl ?>";
+  </script>
+
   <style>
     /* === OVERRIDE PASTEL PARA EL VERTICAL FOOD === */
     :root {
@@ -240,11 +245,20 @@
   </section>
 
   <!-- Badge Rakon -->
-  <a href="?app=hub" class="food-rakon-badge">
+  <a href="javascript:void(0)" onclick="volverAlHub()" class="food-rakon-badge">
     ⚡ POWERED BY RAKON
   </a>
 
   <script>
+  function volverAlHub() {
+    const baseUrl = window.RAKON_WEBAPP_URL;
+    if (!baseUrl) {
+      Rakon.toast('error', 'URL no disponible');
+      return;
+    }
+    window.open(baseUrl + '?app=hub', '_blank');
+  }
+
   window.FoodView = (function() {
 
     function init() {

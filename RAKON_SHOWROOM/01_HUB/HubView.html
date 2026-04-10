@@ -7,6 +7,13 @@
   <?!= include('rakon-tokens'); ?>
   <?!= include('rakon-base'); ?>
   <?!= include('rakon-helpers'); ?>
+
+  <!-- Inyección de la URL real de la Web App desde Code.gs -->
+  <!-- Necesario porque window.location dentro del iframe sandbox de GAS -->
+  <!-- no apunta a la URL pública real, sino a una ruta interna de Google. -->
+  <script>
+    window.RAKON_WEBAPP_URL = "<?= webAppUrl ?>";
+  </script>
 </head>
 <body class="rakon-grid-bg">
 
@@ -238,8 +245,15 @@
 
   <script>
     function abrirDemo(app) {
-      const url = window.location.pathname + '?app=' + app;
-      window.open(url, '_blank');
+      // Usa la URL real inyectada por GAS, no window.location
+      // (que apunta al iframe interno y rompe el ruteo).
+      const baseUrl = window.RAKON_WEBAPP_URL;
+      if (!baseUrl) {
+        Rakon.toast('error', 'URL no disponible. Recarga la página.');
+        return;
+      }
+      const fullUrl = baseUrl + '?app=' + app;
+      window.open(fullUrl, '_blank');
     }
 
     function proximamente(nombre) {
