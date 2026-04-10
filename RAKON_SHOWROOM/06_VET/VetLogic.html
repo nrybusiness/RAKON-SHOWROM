@@ -1,0 +1,30 @@
+<script>
+window.VetLogic = (function() {
+  function getVaccineStatus(nextDate) {
+    const now = new Date();
+    const next = new Date(nextDate);
+    const diff = (next - now) / (1000*60*60*24);
+    if (diff < 0) return { label: 'VENCIDA', color: '#EF4444' };
+    if (diff < 30) return { label: 'PRÓXIMA', color: '#F59E0B' };
+    return { label: 'VIGENTE', color: '#10B981' };
+  }
+  function shareHistory(petId) {
+    const pet = VetData.getPetById(petId);
+    if (!pet) return;
+    const vac = VetData.getVaccinesByPet(petId);
+    const bath= VetData.getBathsByPet(petId);
+    const con = VetData.getConsultationsByPet(petId);
+    let msg = '🐾 HISTORIA CLÍNICA — ' + VetData.brand.name + '\n\n';
+    msg += '📋 ' + pet.name + ' · ' + pet.breed + ' · ' + pet.age + ' años\n';
+    msg += 'Propietario: ' + pet.owner + '\n\n';
+    msg += '💉 VACUNAS (' + vac.length + ')\n';
+    vac.forEach(v => { msg += '• ' + v.name + ' — ' + v.date + ' (próx: ' + v.nextDate + ')\n'; });
+    msg += '\n🛁 BAÑOS (' + bath.length + ')\n';
+    bath.forEach(b => { msg += '• ' + b.date + ' — ' + b.service + '\n'; });
+    msg += '\n🩺 CONSULTAS (' + con.length + ')\n';
+    con.forEach(c => { msg += '• ' + c.date + ' — ' + c.reason + ' → ' + c.diagnosis + '\n'; });
+    Rakon.sendToWhatsApp(msg);
+  }
+  return { getVaccineStatus, shareHistory };
+})();
+</script>

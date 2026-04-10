@@ -1,0 +1,21 @@
+<script>
+window.OpsData = {
+  brand: { name: 'Taller Mecánico Demo', tagline: 'Servicio · Transparencia · Seguimiento' },
+  states: [
+    { id: 'recibido',   label: 'Recibido',     color: '#6B7280', icon: '📥' },
+    { id: 'diagnostico',label: 'Diagnóstico',  color: '#3B82F6', icon: '🔍' },
+    { id: 'reparacion', label: 'En Reparación',color: '#F59E0B', icon: '🔧' },
+    { id: 'pruebas',    label: 'Pruebas',      color: '#8B5CF6', icon: '🧪' },
+    { id: 'listo',      label: 'Listo',        color: '#10B981', icon: '✅' }
+  ],
+  orders: [
+    { id: 'OT-1042', client: 'Andrés López', vehicle: 'Mazda 3 · 2018 · XYZ-123', service: 'Cambio de aceite + filtros', state: 'listo',      technician: 'Jorge M.', entryDate: '2026-04-08', estimatedCost: 280000 },
+    { id: 'OT-1043', client: 'María Gómez',  vehicle: 'Chevrolet Spark · 2020 · ABC-456', service: 'Frenos delanteros', state: 'pruebas',    technician: 'Luis R.', entryDate: '2026-04-09', estimatedCost: 450000 },
+    { id: 'OT-1044', client: 'Carlos Vera',  vehicle: 'Renault Logan · 2019 · DEF-789', service: 'Alineación + balanceo', state: 'reparacion', technician: 'Jorge M.', entryDate: '2026-04-09', estimatedCost: 180000 },
+    { id: 'OT-1045', client: 'Laura Pérez',  vehicle: 'Kia Picanto · 2021 · GHI-012', service: 'Revisión general', state: 'diagnostico', technician: 'Luis R.', entryDate: '2026-04-10', estimatedCost: 0 },
+    { id: 'OT-1046', client: 'Juan Castro',  vehicle: 'Ford Fiesta · 2017 · JKL-345', service: 'Embrague', state: 'recibido',    technician: 'Pendiente', entryDate: '2026-04-10', estimatedCost: 0 }
+  ],
+  getStateById(id) { return this.states.find(s => s.id === id); },
+  getStateIndex(id) { return this.states.findIndex(s => s.id === id); }
+};
+</script>

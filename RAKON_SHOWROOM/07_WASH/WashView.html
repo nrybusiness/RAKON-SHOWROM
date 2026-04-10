@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAKON · Lavadero Demo</title>
+<?!= include('rakon-tokens'); ?><?!= include('rakon-base'); ?><?!= include('rakon-helpers'); ?>
+<?!= include('WashData'); ?><?!= include('WashLogic'); ?>
+<script>window.RAKON_WEBAPP_URL = "<?= webAppUrl ?>";</script>
+<style>
+.w-card{background:rgba(30,41,59,.6);backdrop-filter:blur(10px);border:1px solid rgba(56,189,248,.2);border-radius:16px;padding:1.5rem}
+.w-opt{cursor:pointer;background:rgba(15,23,42,.6);border:2px solid rgba(56,189,248,.15);border-radius:14px;padding:1.25rem;text-align:center;transition:all .2s}
+.w-opt:hover{border-color:#38BDF8}
+.w-opt.active{border-color:#38BDF8;background:rgba(56,189,248,.1);box-shadow:0 0 20px rgba(56,189,248,.25)}
+.w-input{background:rgba(15,23,42,.8);border:1px solid rgba(56,189,248,.3);border-radius:10px;padding:.85rem 1rem;color:#F1F5F9;font-family:var(--rakon-font-mono);font-size:1.1rem;letter-spacing:.1em;text-align:center;width:100%;text-transform:uppercase}
+.w-btn{background:linear-gradient(135deg,#38BDF8,#0EA5E9);color:#0F172A;border:none;padding:1rem 2rem;border-radius:12px;cursor:pointer;font-weight:700;width:100%;font-size:1rem}
+.w-btn:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(56,189,248,.4)}
+.rakon-badge{position:fixed;bottom:1rem;left:1rem;background:#0A0A0A;color:#F5F1E8;padding:.5rem .9rem;border-radius:999px;font-family:var(--rakon-font-mono);font-size:.7rem;z-index:100;cursor:pointer;border:1px solid #C9A227;text-decoration:none}
+</style></head><body style="background:linear-gradient(180deg,#0F172A,#1E293B);color:#F1F5F9;font-family:var(--rakon-font-body);min-height:100vh;">
+<script>function volverAlHub(){const u=window.RAKON_WEBAPP_URL;if(u)window.open(u+'?app=hub','_blank');}</script>
+
+<nav class="px-6 py-4 flex items-center justify-between" style="background:rgba(15,23,42,.8);backdrop-filter:blur(10px);border-bottom:1px solid rgba(56,189,248,.2)">
+<div class="flex items-center gap-3"><div class="text-3xl">🚿</div><div><div class="font-bold text-lg">AquaWash Demo</div><div class="text-xs" style="color:#94A3B8">Lavado express</div></div></div>
+</nav>
+<section class="px-6 py-12 max-w-4xl mx-auto">
+<h1 class="text-4xl font-bold mb-2 text-center" style="font-family:var(--rakon-font-display)">Tu lavado en <span style="color:#38BDF8">3 pasos</span>.</h1>
+<p class="text-center mb-10" style="color:#94A3B8">Elige vehículo, servicio y agenda.</p>
+
+<div class="w-card mb-6">
+<div class="text-xs mb-3 rakon-mono" style="color:#38BDF8">01 · TIPO DE VEHÍCULO</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="vehiclesGrid"></div>
+</div>
+
+<div class="w-card mb-6">
+<div class="text-xs mb-3 rakon-mono" style="color:#38BDF8">02 · SERVICIO</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="servicesGrid"></div>
+</div>
+
+<div class="w-card mb-6">
+<div class="text-xs mb-3 rakon-mono" style="color:#38BDF8">03 · PLACA</div>
+<input type="text" class="w-input" id="plateInput" placeholder="ABC-123" maxlength="8" oninput="WashView.updatePlate(this.value)">
+</div>
+
+<div class="w-card">
+<div class="flex justify-between items-center mb-2"><span style="color:#94A3B8">Duración estimada</span><span class="font-bold rakon-mono" id="durLabel">—</span></div>
+<div class="flex justify-between items-center mb-5 pb-5 border-b" style="border-color:rgba(56,189,248,.2)"><span style="color:#94A3B8">Total a pagar</span><span class="text-2xl font-bold" style="color:#38BDF8" id="priceLabel">$ 0</span></div>
+<button class="w-btn" onclick="WashLogic.sendOrder()">Reservar por WhatsApp</button>
+</div>
+</section>
+<script>
+window.WashView=(function(){
+  function init(){renderVehicles();renderServices();}
+  function renderVehicles(){
+    document.getElementById('vehiclesGrid').innerHTML=WashData.vehicleTypes.map(v=>`
+      <div class="w-opt ${WashLogic.order.vehicleType===v.id?'active':''}" data-v="${v.id}" onclick="WashView.pickVehicle('${v.id}')">
+        <div class="text-4xl mb-2">${v.icon}</div>
+        <div class="font-semibold">${v.label}</div>
+      </div>`).join('');
+  }
+  function renderServices(){
+    document.getElementById('servicesGrid').innerHTML=WashData.services.map(s=>{
+      const p=WashLogic.order.vehicleType?s.prices[WashLogic.order.vehicleType]:null;
+      return `<div class="w-opt ${WashLogic.order.serviceId===s.id?'active':''}" data-s="${s.id}" onclick="WashView.pickService('${s.id}')">
+        <div class="text-3xl mb-2">${s.icon}</div>
+        <div class="font-semibold mb-1">${s.name}</div>
+        <div class="text-xs" style="color:#94A3B8">${s.duration} min · ${p?Rakon.formatCOP(p):'Elige vehículo'}</div>
+      </div>`;
+    }).join('');
+  }
+  function pickVehicle(id){WashLogic.setVehicle(id);renderVehicles();renderServices();refresh();}
+  function pickService(id){WashLogic.setService(id);renderServices();refresh();}
+  function updatePlate(v){WashLogic.setPlate(v);}
+  function refresh(){
+    document.getElementById('priceLabel').textContent=Rakon.formatCOP(WashLogic.getCurrentPrice());
+    document.getElementById('durLabel').textContent=WashLogic.getCurrentDuration()+' MIN';
+  }
+  return{init,pickVehicle,pickService,updatePlate};
+})();
+document.addEventListener('DOMContentLoaded',WashView.init);
+</script>
+<a href="javascript:void(0)" onclick="volverAlHub()" class="rakon-badge">⚡ POWERED BY RAKON</a>
+</body></html>

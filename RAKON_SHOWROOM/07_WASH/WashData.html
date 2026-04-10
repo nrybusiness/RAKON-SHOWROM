@@ -1,0 +1,19 @@
+<script>
+window.WashData = {
+  brand: { name: 'AquaWash Demo', tagline: 'Lavado express · Carros y motos' },
+  vehicleTypes: [
+    { id: 'moto',  label: 'Moto',    icon: '🏍️' },
+    { id: 'auto',  label: 'Auto',    icon: '🚗' },
+    { id: 'suv',   label: 'SUV/4x4', icon: '🚙' },
+    { id: 'camioneta', label: 'Camioneta', icon: '🛻' }
+  ],
+  services: [
+    { id: 'w01', name: 'Lavado Básico', duration: 20, prices: { moto: 12000, auto: 20000, suv: 25000, camioneta: 28000 }, icon: '💧' },
+    { id: 'w02', name: 'Lavado Premium', duration: 40, prices: { moto: 20000, auto: 35000, suv: 45000, camioneta: 50000 }, icon: '✨' },
+    { id: 'w03', name: 'Encerado Completo', duration: 60, prices: { moto: 30000, auto: 60000, suv: 75000, camioneta: 85000 }, icon: '🛡️' },
+    { id: 'w04', name: 'Detailing Full', duration: 120, prices: { moto: 55000, auto: 120000, suv: 150000, camioneta: 170000 }, icon: '💎' }
+  ],
+  getServiceById(id) { return this.services.find(s => s.id === id); },
+  getVehicleTypeById(id) { return this.vehicleTypes.find(v => v.id === id); }
+};
+</script>

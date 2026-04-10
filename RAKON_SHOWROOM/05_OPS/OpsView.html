@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAKON · Gestión Operativa Demo</title>
+<?!= include('rakon-tokens'); ?><?!= include('rakon-base'); ?><?!= include('rakon-helpers'); ?>
+<?!= include('OpsData'); ?><?!= include('OpsLogic'); ?>
+<script>window.RAKON_WEBAPP_URL = "<?= webAppUrl ?>";</script>
+<style>
+.o-card{background:#161B22;border:1px solid #30363D;border-radius:10px;padding:1.25rem}
+.o-bar{height:6px;background:#21262D;border-radius:3px;overflow:hidden}
+.o-bar-fill{height:100%;background:linear-gradient(90deg,#3B82F6,#10B981);transition:width .4s}
+.o-badge{display:inline-flex;align-items:center;gap:.3rem;padding:.25rem .6rem;border-radius:4px;font-size:.7rem;font-weight:700}
+.o-btn{background:#238636;color:#fff;border:none;padding:.5rem 1rem;border-radius:6px;cursor:pointer;font-family:inherit;font-size:.8rem}
+.o-btn:hover{background:#2EA043}
+.rakon-badge{position:fixed;bottom:1rem;left:1rem;background:#0A0A0A;color:#F5F1E8;padding:.5rem .9rem;border-radius:999px;font-family:var(--rakon-font-mono);font-size:.7rem;z-index:100;cursor:pointer;border:1px solid #C9A227;text-decoration:none}
+</style></head><body style="background:#0D1117;color:#E6EDF3;font-family:var(--rakon-font-mono);">
+<script>function volverAlHub(){const u=window.RAKON_WEBAPP_URL;if(u)window.open(u+'?app=hub','_blank');}</script>
+
+<nav class="px-6 py-4 flex items-center justify-between" style="background:#010409;border-bottom:1px solid #30363D">
+<div class="flex items-center gap-3"><div class="text-2xl">🔧</div><div><div class="font-bold">Taller Mecánico Demo</div><div class="text-xs" style="color:#7D8590">Dashboard operativo</div></div></div>
+<div class="text-xs" style="color:#3FB950">● SISTEMA ACTIVO</div>
+</nav>
+<section class="px-6 py-8 max-w-7xl mx-auto">
+<h1 class="text-3xl font-bold mb-2" style="font-family:var(--rakon-font-display)">Órdenes de Trabajo</h1>
+<p class="text-sm mb-8" style="color:#7D8590">Estado en vivo · 5 órdenes activas</p>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-4" id="ordersGrid"></div>
+</section>
+<script>
+window.OpsView=(function(){
+  function init(){
+    document.getElementById('ordersGrid').innerHTML=OpsData.orders.map(o=>{
+      const st=OpsData.getStateById(o.state);const pr=OpsLogic.getOrderProgress(o);
+      return `<div class="o-card">
+        <div class="flex items-start justify-between mb-3">
+          <div><div class="text-lg font-bold">${o.id}</div><div class="text-xs" style="color:#7D8590">${o.entryDate}</div></div>
+          <div class="o-badge" style="background:${st.color}22;color:${st.color}">${st.icon} ${st.label.toUpperCase()}</div>
+        </div>
+        <div class="text-sm mb-1">${o.client}</div>
+        <div class="text-xs mb-3" style="color:#7D8590">${o.vehicle}</div>
+        <div class="text-xs mb-3" style="color:#E6EDF3">🔧 ${o.service}</div>
+        <div class="text-xs mb-1 flex justify-between"><span style="color:#7D8590">Progreso</span><span>${pr}%</span></div>
+        <div class="o-bar mb-3"><div class="o-bar-fill" style="width:${pr}%"></div></div>
+        <div class="flex justify-between items-center">
+          <div class="text-xs" style="color:#7D8590">Técnico: ${o.technician}${o.estimatedCost?' · '+Rakon.formatCOP(o.estimatedCost):''}</div>
+          <button class="o-btn" onclick="OpsLogic.notifyClient('${o.id}')">Notificar</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+  return{init};
+})();
+document.addEventListener('DOMContentLoaded',OpsView.init);
+</script>
+<a href="javascript:void(0)" onclick="volverAlHub()" class="rakon-badge">⚡ POWERED BY RAKON</a>
+</body></html>

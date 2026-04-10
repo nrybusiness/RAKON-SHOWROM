@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAKON · Veterinaria Demo</title>
+<?!= include('rakon-tokens'); ?><?!= include('rakon-base'); ?><?!= include('rakon-helpers'); ?>
+<?!= include('VetData'); ?><?!= include('VetLogic'); ?>
+<script>window.RAKON_WEBAPP_URL = "<?= webAppUrl ?>";</script>
+<style>
+.v-card{background:#fff;border:1px solid #BAE6FD;border-radius:20px;padding:1.5rem;box-shadow:0 4px 12px rgba(14,165,233,.08)}
+.v-pet{cursor:pointer;transition:all .2s;border:2px solid #BAE6FD}
+.v-pet:hover{transform:translateY(-2px);border-color:#0EA5E9}
+.v-pet.active{border-color:#0EA5E9;background:#F0F9FF}
+.v-tab{padding:.6rem 1.2rem;border-radius:999px;background:#E0F2FE;color:#075985;cursor:pointer;font-weight:600;font-size:.85rem}
+.v-tab.active{background:#0EA5E9;color:#fff}
+.v-btn{background:#0EA5E9;color:#fff;border:none;padding:.85rem 1.4rem;border-radius:10px;cursor:pointer;font-weight:600}
+.v-btn:hover{background:#0284C7}
+.rakon-badge{position:fixed;bottom:1rem;left:1rem;background:#0A0A0A;color:#F5F1E8;padding:.5rem .9rem;border-radius:999px;font-family:var(--rakon-font-mono);font-size:.7rem;z-index:100;cursor:pointer;border:1px solid #C9A227;text-decoration:none}
+</style></head><body style="background:#F0F9FF;color:#0C4A6E;font-family:var(--rakon-font-body);">
+<script>function volverAlHub(){const u=window.RAKON_WEBAPP_URL;if(u)window.open(u+'?app=hub','_blank');}</script>
+
+<nav class="px-6 py-4 flex items-center justify-between" style="background:#fff;border-bottom:1px solid #BAE6FD">
+<div class="flex items-center gap-3"><div class="text-3xl">🐾</div><div><div class="font-bold text-lg">Veterinaria Demo</div><div class="text-xs" style="color:#0284C7">Historia clínica digital</div></div></div>
+</nav>
+<section class="px-6 py-8 max-w-6xl mx-auto">
+<h1 class="text-3xl font-bold mb-6">Mis Mascotas</h1>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8" id="petsGrid"></div>
+<div id="petDetail"></div>
+</section>
+<script>
+window.VetView=(function(){
+  let curPet=null;let curTab='vaccines';
+  function init(){renderPets();select(VetData.pets[0].id);}
+  function renderPets(){
+    document.getElementById('petsGrid').innerHTML=VetData.pets.map(p=>`
+      <div class="v-card v-pet ${p.id===curPet?'active':''}" onclick="VetView.select('${p.id}')">
+        <div class="flex items-center gap-4">
+          <div class="text-5xl">${p.photo}</div>
+          <div><div class="font-bold text-lg">${p.name}</div><div class="text-xs" style="color:#0284C7">${p.breed} · ${p.age} años</div><div class="text-xs" style="color:#64748B">${p.owner}</div></div>
+        </div>
+      </div>`).join('');
+  }
+  function select(id){curPet=id;renderPets();renderDetail();}
+  function setTab(t){curTab=t;renderDetail();}
+  function renderDetail(){
+    const p=VetData.getPetById(curPet);if(!p)return;
+    const vac=VetData.getVaccinesByPet(curPet);
+    const bath=VetData.getBathsByPet(curPet);
+    const con=VetData.getConsultationsByPet(curPet);
+    let body='';
+    if(curTab==='vaccines'){
+      body=vac.map(v=>{const st=VetLogic.getVaccineStatus(v.nextDate);return `<div class="flex justify-between items-center py-3 border-b" style="border-color:#E0F2FE"><div><div class="font-semibold">💉 ${v.name}</div><div class="text-xs" style="color:#64748B">Aplicada: ${v.date} · Próx: ${v.nextDate} · ${v.vet}</div></div><span class="text-xs font-bold px-2 py-1 rounded" style="background:${st.color}22;color:${st.color}">${st.label}</span></div>`;}).join('');
+    } else if(curTab==='baths'){
+      body=bath.map(b=>`<div class="py-3 border-b" style="border-color:#E0F2FE"><div class="flex justify-between"><div class="font-semibold">🛁 ${b.service}</div><div class="font-bold" style="color:#0EA5E9">${Rakon.formatCOP(b.price)}</div></div><div class="text-xs" style="color:#64748B">${b.date} · ${b.notes}</div></div>`).join('');
+    } else {
+      body=con.map(c=>`<div class="py-3 border-b" style="border-color:#E0F2FE"><div class="font-semibold">🩺 ${c.reason}</div><div class="text-xs mb-1" style="color:#64748B">${c.date} · ${c.vet}</div><div class="text-sm">Dx: ${c.diagnosis}</div><div class="text-xs" style="color:#64748B">Tto: ${c.treatment}</div></div>`).join('');
+    }
+    document.getElementById('petDetail').innerHTML=`
+      <div class="v-card">
+        <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+          <div><div class="text-2xl font-bold">${p.name} <span class="text-sm font-normal" style="color:#64748B">· ${p.weight}kg</span></div></div>
+          <button class="v-btn" onclick="VetLogic.shareHistory('${p.id}')">📱 Enviar historia</button>
+        </div>
+        <div class="flex gap-2 mb-5 flex-wrap">
+          <span class="v-tab ${curTab==='vaccines'?'active':''}" onclick="VetView.setTab('vaccines')">💉 Vacunas (${vac.length})</span>
+          <span class="v-tab ${curTab==='baths'?'active':''}" onclick="VetView.setTab('baths')">🛁 Baños (${bath.length})</span>
+          <span class="v-tab ${curTab==='consults'?'active':''}" onclick="VetView.setTab('consults')">🩺 Consultas (${con.length})</span>
+        </div>
+        <div>${body}</div>
+      </div>`;
+  }
+  return{init,select,setTab};
+})();
+document.addEventListener('DOMContentLoaded',VetView.init);
+</script>
+<a href="javascript:void(0)" onclick="volverAlHub()" class="rakon-badge">⚡ POWERED BY RAKON</a>
+</body></html>

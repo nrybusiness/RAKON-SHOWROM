@@ -1,0 +1,32 @@
+<script>
+window.WashLogic = (function() {
+  let order = { vehicleType: null, serviceId: null, plate: '' };
+  function setVehicle(v) { order.vehicleType = v; }
+  function setService(s) { order.serviceId = s; }
+  function setPlate(p) { order.plate = p.toUpperCase(); }
+  function getCurrentPrice() {
+    if (!order.vehicleType || !order.serviceId) return 0;
+    const s = WashData.getServiceById(order.serviceId);
+    return s ? s.prices[order.vehicleType] : 0;
+  }
+  function getCurrentDuration() {
+    if (!order.serviceId) return 0;
+    const s = WashData.getServiceById(order.serviceId);
+    return s ? s.duration : 0;
+  }
+  function sendOrder() {
+    if (!order.vehicleType || !order.serviceId) { Rakon.toast('error', 'Completa los datos'); return; }
+    if (!order.plate) { Rakon.toast('error', 'Ingresa la placa'); return; }
+    const v = WashData.getVehicleTypeById(order.vehicleType);
+    const s = WashData.getServiceById(order.serviceId);
+    const msg = '🚿 NUEVO SERVICIO — ' + WashData.brand.name + '\n\n' +
+                'Vehículo: ' + v.icon + ' ' + v.label + '\n' +
+                'Placa: ' + order.plate + '\n' +
+                'Servicio: ' + s.icon + ' ' + s.name + '\n' +
+                'Duración: ~' + s.duration + ' min\n' +
+                'Valor: ' + Rakon.formatCOP(getCurrentPrice()) + '\n\n¿Disponibilidad ahora?';
+    Rakon.sendToWhatsApp(msg);
+  }
+  return { get order() { return order; }, setVehicle, setService, setPlate, getCurrentPrice, getCurrentDuration, sendOrder };
+})();
+</script>

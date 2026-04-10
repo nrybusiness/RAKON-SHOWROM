@@ -1,0 +1,33 @@
+<script>
+window.VetData = {
+  brand: { name: 'Veterinaria Demo', tagline: 'Salud integral para tu mascota' },
+  pets: [
+    { id: 'pet01', name: 'Luna', species: 'Perro', breed: 'Golden Retriever', age: 3, weight: 28, owner: 'María Gómez', ownerPhone: '3001234567', photo: '🐕' },
+    { id: 'pet02', name: 'Milo', species: 'Gato',  breed: 'Siamés',          age: 2, weight: 4.5,owner: 'Andrés López', ownerPhone: '3017654321', photo: '🐈' },
+    { id: 'pet03', name: 'Rocky',species: 'Perro', breed: 'Bulldog Francés', age: 5, weight: 12, owner: 'Carlos Vera',  ownerPhone: '3021112233', photo: '🐶' }
+  ],
+  vaccines: [
+    { petId: 'pet01', name: 'Rabia',           date: '2025-11-15', nextDate: '2026-11-15', vet: 'Dr. Ramírez' },
+    { petId: 'pet01', name: 'Polivalente',     date: '2025-09-10', nextDate: '2026-09-10', vet: 'Dr. Ramírez' },
+    { petId: 'pet01', name: 'Bordetella',      date: '2026-02-20', nextDate: '2026-08-20', vet: 'Dra. Ortiz' },
+    { petId: 'pet02', name: 'Triple Felina',   date: '2025-12-05', nextDate: '2026-12-05', vet: 'Dra. Ortiz' },
+    { petId: 'pet02', name: 'Leucemia Felina', date: '2025-10-01', nextDate: '2026-10-01', vet: 'Dr. Ramírez' },
+    { petId: 'pet03', name: 'Rabia',           date: '2025-08-12', nextDate: '2026-08-12', vet: 'Dr. Ramírez' }
+  ],
+  baths: [
+    { petId: 'pet01', date: '2026-03-28', service: 'Baño + Corte', price: 55000, notes: 'Pelaje sano' },
+    { petId: 'pet01', date: '2026-02-15', service: 'Baño medicado', price: 70000, notes: 'Tratamiento antipulgas' },
+    { petId: 'pet02', date: '2026-03-10', service: 'Baño gato', price: 45000, notes: 'Tranquilo' },
+    { petId: 'pet03', date: '2026-03-22', service: 'Baño + Uñas', price: 60000, notes: 'Uñas cortadas' }
+  ],
+  consultations: [
+    { petId: 'pet01', date: '2026-01-18', reason: 'Control anual', diagnosis: 'Sano', treatment: 'Ninguno', vet: 'Dr. Ramírez' },
+    { petId: 'pet02', date: '2026-02-22', reason: 'Vómito ocasional', diagnosis: 'Gastritis leve', treatment: 'Dieta blanda 3 días', vet: 'Dra. Ortiz' },
+    { petId: 'pet03', date: '2026-03-05', reason: 'Cojera pata trasera', diagnosis: 'Distensión muscular', treatment: 'Reposo + antiinflamatorio', vet: 'Dr. Ramírez' }
+  ],
+  getPetById(id) { return this.pets.find(p => p.id === id); },
+  getVaccinesByPet(id) { return this.vaccines.filter(v => v.petId === id); },
+  getBathsByPet(id) { return this.baths.filter(b => b.petId === id); },
+  getConsultationsByPet(id) { return this.consultations.filter(c => c.petId === id); }
+};
+</script>

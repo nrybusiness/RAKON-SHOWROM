@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAKON · Retail & Moda Demo</title>
+<?!= include('rakon-tokens'); ?><?!= include('rakon-base'); ?><?!= include('rakon-helpers'); ?>
+<?!= include('RetailData'); ?><?!= include('RetailLogic'); ?>
+<script>window.RAKON_WEBAPP_URL = "<?= webAppUrl ?>";</script>
+<style>
+.r-card{background:#fff;border:1px solid #EEE;border-radius:20px;overflow:hidden;transition:all .2s}
+.r-card:hover{transform:translateY(-4px);box-shadow:0 20px 40px rgba(0,0,0,.08)}
+.r-btn{background:#000;color:#fff;border:none;padding:.85rem 1.4rem;border-radius:10px;cursor:pointer;font-weight:600;width:100%;transition:all .2s}
+.r-btn:hover{background:#C9A227}
+.r-chip{display:inline-block;padding:.3rem .7rem;border:1px solid #DDD;border-radius:999px;font-size:.75rem;cursor:pointer;transition:all .15s;background:#fff}
+.r-chip.active{background:#000;color:#fff;border-color:#000}
+.r-sel{border:1px solid #DDD;border-radius:8px;padding:.5rem;background:#fff;font-size:.85rem;width:100%}
+.rakon-badge{position:fixed;bottom:1rem;left:1rem;background:#0A0A0A;color:#F5F1E8;padding:.5rem .9rem;border-radius:999px;font-family:var(--rakon-font-mono);font-size:.7rem;z-index:100;cursor:pointer;border:1px solid #C9A227;text-decoration:none}
+</style></head><body style="background:#FAFAF8;color:#1A1A1A;font-family:var(--rakon-font-body);">
+<script>function volverAlHub(){const u=window.RAKON_WEBAPP_URL;if(u)window.open(u+'?app=hub','_blank');}</script>
+
+<nav class="sticky top-0 z-40 backdrop-blur-md px-6 py-4 flex items-center justify-between" style="background:rgba(250,250,248,.9);border-bottom:1px solid #EEE">
+<div class="flex items-center gap-3"><div class="text-3xl">👗</div><div><div class="font-bold text-lg" style="font-family:var(--rakon-font-display)">Boutique Demo</div><div class="text-xs text-gray-500">Moda · Estilo</div></div></div>
+</nav>
+<section class="px-6 py-12 max-w-6xl mx-auto text-center">
+<h1 class="text-5xl font-bold mb-3" style="font-family:var(--rakon-font-display)">Colección <span style="color:#C9A227">Hoy</span>.</h1>
+<p class="text-gray-500">Filtra, elige, cierra por WhatsApp.</p>
+</section>
+<section class="px-6 pb-24 max-w-6xl mx-auto">
+<div class="flex flex-wrap gap-2 mb-8" id="catFilters"></div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="productsGrid"></div>
+</section>
+<script>
+window.RetailView=(function(){
+  function init(){renderCats();render();}
+  function renderCats(){
+    const cats=['all',...new Set(RetailData.products.map(p=>p.category))];
+    document.getElementById('catFilters').innerHTML=cats.map(c=>`<span class="r-chip ${c==='all'?'active':''}" onclick="RetailView.filterCat('${c}')">${c==='all'?'Todo':c}</span>`).join('');
+  }
+  function filterCat(c){RetailLogic.setFilter('category',c);document.querySelectorAll('.r-chip').forEach(el=>el.classList.toggle('active',el.textContent===(c==='all'?'Todo':c)));render();}
+  function render(){
+    const prods=RetailLogic.getFilteredProducts();
+    document.getElementById('productsGrid').innerHTML=prods.map(p=>`
+      <div class="r-card p-6">
+        <div class="text-7xl text-center mb-4">${p.emoji}</div>
+        <div class="text-xs text-gray-400 mb-1">${p.category.toUpperCase()}</div>
+        <h3 class="font-bold text-lg mb-2">${p.name}</h3>
+        <div class="text-xl font-bold mb-4" style="color:#C9A227">${Rakon.formatCOP(p.price)}</div>
+        <div class="grid grid-cols-2 gap-2 mb-3">
+          <select class="r-sel" id="size-${p.id}">${p.sizes.map(s=>`<option>${s}</option>`).join('')}</select>
+          <select class="r-sel" id="color-${p.id}">${p.colors.map(c=>`<option>${c}</option>`).join('')}</select>
+        </div>
+        <div class="text-xs text-gray-500 mb-3" id="stock-${p.id}">Stock: —</div>
+        <button class="r-btn" onclick="RetailView.buy('${p.id}')">Comprar por WhatsApp</button>
+      </div>`).join('');
+    prods.forEach(p=>{updateStock(p.id);document.getElementById('size-'+p.id).onchange=()=>updateStock(p.id);document.getElementById('color-'+p.id).onchange=()=>updateStock(p.id);});
+  }
+  function updateStock(id){const s=document.getElementById('size-'+id).value;const c=document.getElementById('color-'+id).value;const st=RetailLogic.getStock(id,s,c);document.getElementById('stock-'+id).innerHTML=st>0?`✓ ${st} disponibles`:'<span style="color:#EF4444">✗ Sin stock</span>';}
+  function buy(id){const s=document.getElementById('size-'+id).value;const c=document.getElementById('color-'+id).value;RetailLogic.buyViaWhatsApp(id,s,c);}
+  return {init,filterCat,buy};
+})();
+document.addEventListener('DOMContentLoaded',RetailView.init);
+</script>
+<a href="javascript:void(0)" onclick="volverAlHub()" class="rakon-badge">⚡ POWERED BY RAKON</a>
+</body></html>

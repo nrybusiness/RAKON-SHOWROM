@@ -1,0 +1,14 @@
+<script>
+window.RetailData = {
+  brand: { name: 'Boutique Demo', tagline: 'Moda · Estilo · Tendencia' },
+  products: [
+    { id: 'r01', name: 'Blazer Oversize', price: 185000, emoji: '🧥', category: 'Abrigos', sizes: ['S','M','L'], colors: ['Negro','Beige'], stock: {'S-Negro':3,'M-Negro':2,'L-Negro':0,'S-Beige':1,'M-Beige':4,'L-Beige':2} },
+    { id: 'r02', name: 'Jean Mom Fit', price: 125000, emoji: '👖', category: 'Pantalones', sizes: ['26','28','30','32'], colors: ['Azul','Negro'], stock: {'26-Azul':2,'28-Azul':5,'30-Azul':3,'32-Azul':1,'26-Negro':0,'28-Negro':2,'30-Negro':2,'32-Negro':0} },
+    { id: 'r03', name: 'Vestido Midi', price: 145000, emoji: '👗', category: 'Vestidos', sizes: ['S','M','L'], colors: ['Rojo','Negro'], stock: {'S-Rojo':2,'M-Rojo':3,'L-Rojo':1,'S-Negro':4,'M-Negro':2,'L-Negro':3} },
+    { id: 'r04', name: 'Camiseta Oversize', price: 65000, emoji: '👕', category: 'Tops', sizes: ['S','M','L','XL'], colors: ['Blanco','Negro'], stock: {'S-Blanco':8,'M-Blanco':6,'L-Blanco':4,'XL-Blanco':2,'S-Negro':5,'M-Negro':5,'L-Negro':3,'XL-Negro':1} },
+    { id: 'r05', name: 'Falda Plisada', price: 95000, emoji: '👚', category: 'Faldas', sizes: ['S','M','L'], colors: ['Beige','Negro'], stock: {'S-Beige':3,'M-Beige':2,'L-Beige':1,'S-Negro':2,'M-Negro':3,'L-Negro':2} },
+    { id: 'r06', name: 'Chaqueta Bomber', price: 165000, emoji: '🧥', category: 'Abrigos', sizes: ['S','M','L'], colors: ['Verde','Negro'], stock: {'S-Verde':1,'M-Verde':2,'L-Verde':0,'S-Negro':3,'M-Negro':2,'L-Negro':4} }
+  ],
+  getProductById(id) { return this.products.find(p => p.id === id); }
+};
+</script>

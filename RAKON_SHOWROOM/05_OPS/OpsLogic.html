@@ -1,0 +1,22 @@
+<script>
+window.OpsLogic = (function() {
+  function getOrderProgress(order) {
+    const idx = OpsData.getStateIndex(order.state);
+    return Math.round(((idx + 1) / OpsData.states.length) * 100);
+  }
+  function notifyClient(orderId) {
+    const o = OpsData.orders.find(x => x.id === orderId);
+    if (!o) return;
+    const state = OpsData.getStateById(o.state);
+    const msg = '🔧 ACTUALIZACIÓN — ' + OpsData.brand.name + '\n\n' +
+                'Orden: ' + o.id + '\n' +
+                'Vehículo: ' + o.vehicle + '\n' +
+                'Estado actual: ' + state.icon + ' ' + state.label + '\n' +
+                'Técnico: ' + o.technician + '\n' +
+                (o.estimatedCost > 0 ? 'Valor estimado: ' + Rakon.formatCOP(o.estimatedCost) + '\n' : '') +
+                '\nSigue el progreso de tu vehículo en línea.';
+    Rakon.sendToWhatsApp(msg);
+  }
+  return { getOrderProgress, notifyClient };
+})();
+</script>

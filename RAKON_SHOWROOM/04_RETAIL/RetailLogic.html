@@ -1,0 +1,31 @@
+<script>
+window.RetailLogic = (function() {
+  let filters = { category: 'all', size: 'all', color: 'all' };
+  function setFilter(k, v) { filters[k] = v; }
+  function getFilteredProducts() {
+    return RetailData.products.filter(p => {
+      if (filters.category !== 'all' && p.category !== filters.category) return false;
+      if (filters.size !== 'all' && !p.sizes.includes(filters.size)) return false;
+      if (filters.color !== 'all' && !p.colors.includes(filters.color)) return false;
+      return true;
+    });
+  }
+  function getStock(productId, size, color) {
+    const p = RetailData.getProductById(productId);
+    return p ? (p.stock[size + '-' + color] || 0) : 0;
+  }
+  function buyViaWhatsApp(productId, size, color) {
+    const p = RetailData.getProductById(productId);
+    const stock = getStock(productId, size, color);
+    if (stock === 0) { Rakon.toast('error', 'Sin stock en esa variante'); return; }
+    const msg = '🛍️ CONSULTA — ' + RetailData.brand.name + '\n\n' +
+                'Producto: ' + p.name + '\n' +
+                'Talla: ' + size + '\n' +
+                'Color: ' + color + '\n' +
+                'Precio: ' + Rakon.formatCOP(p.price) + '\n' +
+                'Stock disponible: ' + stock + ' unidades\n\n¿Está disponible para envío?';
+    Rakon.sendToWhatsApp(msg);
+  }
+  return { filters, setFilter, getFilteredProducts, getStock, buyViaWhatsApp };
+})();
+</script>
