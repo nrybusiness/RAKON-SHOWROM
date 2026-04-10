@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RAKON · Food &amp; Treats Demo</title>
+  <?!= include('rakon-tokens'); ?>
+  <?!= include('rakon-base'); ?>
+  <?!= include('rakon-helpers'); ?>
+  <?!= include('FoodData'); ?>
+  <?!= include('FoodLogic'); ?>
+
+  <style>
+    /* === OVERRIDE PASTEL PARA EL VERTICAL FOOD === */
+    :root {
+      --food-bg:        #FFF9F5;
+      --food-card:      #FFFFFF;
+      --food-text:      #2A1F1A;
+      --food-text-dim:  #8A7B72;
+      --food-pink:      #F4C2C2;
+      --food-pink-soft: #FDE8E8;
+      --food-cream:     #FFF2E5;
+      --food-accent:    #E89B7D;
+      --food-border:    #F0E4DC;
+    }
+
+    body.food-mode {
+      background: var(--food-bg) !important;
+      color: var(--food-text) !important;
+      font-family: var(--rakon-font-body);
+    }
+
+    .food-card {
+      background: var(--food-card);
+      border: 1px solid var(--food-border);
+      border-radius: 24px;
+      transition: transform var(--rakon-medium), box-shadow var(--rakon-medium), border-color var(--rakon-medium);
+    }
+    .food-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(232, 155, 125, 0.15);
+      border-color: var(--food-pink);
+    }
+
+    .food-flavor {
+      cursor: pointer;
+      background: var(--food-card);
+      border: 2px solid var(--food-border);
+      border-radius: 20px;
+      padding: 1.25rem;
+      text-align: center;
+      transition: all var(--rakon-fast);
+    }
+    .food-flavor:hover {
+      border-color: var(--food-pink);
+      transform: translateY(-2px);
+    }
+    .food-flavor.selected {
+      border-color: var(--food-accent);
+      background: var(--food-pink-soft);
+      box-shadow: 0 8px 20px rgba(232, 155, 125, 0.25);
+    }
+
+    .food-topping {
+      cursor: pointer;
+      background: var(--food-card);
+      border: 1.5px solid var(--food-border);
+      border-radius: 14px;
+      padding: 0.75rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      transition: all var(--rakon-fast);
+    }
+    .food-topping:hover { border-color: var(--food-pink); }
+    .food-topping.selected {
+      background: var(--food-pink-soft);
+      border-color: var(--food-accent);
+    }
+
+    .food-size-btn {
+      cursor: pointer;
+      background: var(--food-card);
+      border: 1.5px solid var(--food-border);
+      border-radius: 12px;
+      padding: 0.75rem 1rem;
+      transition: all var(--rakon-fast);
+      flex: 1;
+      text-align: center;
+    }
+    .food-size-btn.selected {
+      background: var(--food-accent);
+      color: white;
+      border-color: var(--food-accent);
+    }
+
+    .food-btn-primary {
+      background: var(--food-accent);
+      color: white;
+      padding: 1rem 2rem;
+      border-radius: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all var(--rakon-fast);
+      width: 100%;
+    }
+    .food-btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(232, 155, 125, 0.35);
+    }
+
+    .food-btn-ghost {
+      background: transparent;
+      color: var(--food-text);
+      border: 1.5px solid var(--food-border);
+      padding: 0.75rem 1.5rem;
+      border-radius: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--rakon-fast);
+    }
+    .food-btn-ghost:hover { border-color: var(--food-accent); }
+
+    .food-rakon-badge {
+      position: fixed;
+      bottom: 1rem;
+      left: 1rem;
+      background: var(--rakon-black);
+      color: var(--rakon-bone);
+      padding: 0.5rem 0.9rem;
+      border-radius: 999px;
+      font-family: var(--rakon-font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.05em;
+      z-index: 100;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      border: 1px solid var(--rakon-brand);
+    }
+  </style>
+</head>
+<body class="food-mode">
+
+  <!-- ============ NAV ============ -->
+  <nav class="sticky top-0 z-40 backdrop-blur-md" style="background: rgba(255,249,245,0.85); border-bottom: 1px solid var(--food-border);">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl flex items-center justify-center text-2xl" style="background: var(--food-pink-soft);">🍦</div>
+        <div>
+          <div class="font-bold text-lg" id="brandName">Gelateria Demo</div>
+          <div class="text-xs" style="color: var(--food-text-dim);" id="brandTagline">Helado artesanal</div>
+        </div>
+      </div>
+      <button class="food-btn-ghost relative" onclick="FoodView.openCart()">
+        🛒 Carrito
+        <span id="cartCount" class="absolute -top-2 -right-2 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold" style="background: var(--food-accent); color: white;">0</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ============ HERO ============ -->
+  <section class="px-6 py-12">
+    <div class="max-w-6xl mx-auto text-center">
+      <div class="inline-block px-4 py-1.5 rounded-full text-xs font-semibold mb-4" style="background: var(--food-pink-soft); color: var(--food-accent);">
+        ✨ ARMA TU HELADO IDEAL
+      </div>
+      <h1 class="text-4xl md:text-5xl font-bold mb-3" style="font-family: var(--rakon-font-display);">
+        Compra con los ojos.
+      </h1>
+      <p class="text-lg" style="color: var(--food-text-dim);">
+        Elige sabor, tamaño y todos los toppings que quieras.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ CONSTRUCTOR ============ -->
+  <section class="px-6 pb-24">
+    <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+      <!-- IZQ: Sabores y toppings -->
+      <div class="lg:col-span-2 space-y-8">
+
+        <!-- SABORES -->
+        <div class="food-card p-6">
+          <div class="flex items-center justify-between mb-5">
+            <h2 class="text-xl font-bold">1 · Elige tu sabor</h2>
+            <span class="text-xs" style="color: var(--food-text-dim);">8 disponibles</span>
+          </div>
+          <div id="flavorsGrid" class="grid grid-cols-2 md:grid-cols-4 gap-3"></div>
+        </div>
+
+        <!-- TAMAÑO -->
+        <div class="food-card p-6">
+          <h2 class="text-xl font-bold mb-5">2 · Tamaño</h2>
+          <div id="sizesRow" class="flex gap-3"></div>
+        </div>
+
+        <!-- TOPPINGS -->
+        <div class="food-card p-6">
+          <div class="flex items-center justify-between mb-5">
+            <h2 class="text-xl font-bold">3 · Toppings (opcional)</h2>
+            <span class="text-xs" style="color: var(--food-text-dim);">Suma todos los que quieras</span>
+          </div>
+          <div id="toppingsGrid" class="grid grid-cols-2 md:grid-cols-3 gap-3"></div>
+        </div>
+
+      </div>
+
+      <!-- DER: Resumen sticky -->
+      <div class="lg:col-span-1">
+        <div class="food-card p-6 sticky top-24">
+          <h3 class="text-lg font-bold mb-4">Tu helado</h3>
+
+          <div id="livePreview" class="rounded-2xl p-5 mb-4" style="background: var(--food-cream);">
+            <div class="text-center">
+              <div class="text-6xl mb-2" id="previewEmoji">🍨</div>
+              <div class="text-sm" id="previewName" style="color: var(--food-text-dim);">Aún no eliges sabor</div>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between mb-5 pb-5 border-b" style="border-color: var(--food-border);">
+            <span class="text-sm" style="color: var(--food-text-dim);">Subtotal</span>
+            <span class="text-2xl font-bold" id="livePrice">$ 0</span>
+          </div>
+
+          <button class="food-btn-primary mb-3" onclick="FoodView.addToCart()">
+            Agregar al carrito
+          </button>
+          <button class="food-btn-ghost w-full" onclick="FoodView.openCart()">
+            Ver carrito y enviar
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Badge Rakon -->
+  <a href="?app=hub" class="food-rakon-badge">
+    ⚡ POWERED BY RAKON
+  </a>
+
+  <script>
+  window.FoodView = (function() {
+
+    function init() {
+      document.getElementById('brandName').textContent    = FoodData.brand.name;
+      document.getElementById('brandTagline').textContent = FoodData.brand.tagline;
+
+      renderFlavors();
+      renderSizes();
+      renderToppings();
+      refreshLive();
+      refreshCart();
+    }
+
+    function renderFlavors() {
+      const grid = document.getElementById('flavorsGrid');
+      grid.innerHTML = FoodData.flavors.map(f => `
+        <div class="food-flavor" data-flavor="${f.id}" onclick="FoodView.pickFlavor('${f.id}')">
+          <div class="text-4xl mb-2">${f.emoji}</div>
+          <div class="font-semibold text-sm">${f.name}</div>
+          <div class="text-xs mt-1" style="color: var(--food-text-dim);">${f.tag} · ${Rakon.formatCOP(f.basePrice)}</div>
+        </div>
+      `).join('');
+    }
+
+    function renderSizes() {
+      const row = document.getElementById('sizesRow');
+      row.innerHTML = FoodData.sizes.map(s => `
+        <div class="food-size-btn ${s.id === 's02' ? 'selected' : ''}" data-size="${s.id}" onclick="FoodView.pickSize('${s.id}')">
+          <div class="font-bold">${s.name}</div>
+          <div class="text-xs opacity-80">${s.label}</div>
+        </div>
+      `).join('');
+    }
+
+    function renderToppings() {
+      const grid = document.getElementById('toppingsGrid');
+      grid.innerHTML = FoodData.toppings.map(t => `
+        <div class="food-topping" data-topping="${t.id}" onclick="FoodView.pickTopping('${t.id}')">
+          <div class="flex items-center gap-2">
+            <span class="text-xl">${t.emoji}</span>
+            <span class="text-sm font-medium">${t.name}</span>
+          </div>
+          <span class="text-xs font-semibold" style="color: var(--food-accent);">+${Rakon.formatCOP(t.price)}</span>
+        </div>
+      `).join('');
+    }
+
+    function pickFlavor(id) {
+      FoodLogic.selectFlavor(id);
+      document.querySelectorAll('[data-flavor]').forEach(el => {
+        el.classList.toggle('selected', el.dataset.flavor === id);
+      });
+      refreshLive();
+    }
+
+    function pickSize(id) {
+      FoodLogic.selectSize(id);
+      document.querySelectorAll('[data-size]').forEach(el => {
+        el.classList.toggle('selected', el.dataset.size === id);
+      });
+      refreshLive();
+    }
+
+    function pickTopping(id) {
+      FoodLogic.toggleTopping(id);
+      const el = document.querySelector(`[data-topping="${id}"]`);
+      if (el) el.classList.toggle('selected');
+      refreshLive();
+    }
+
+    function refreshLive() {
+      const order = FoodLogic.currentOrder;
+      const price = FoodLogic.calculatePrice();
+
+      document.getElementById('livePrice').textContent = Rakon.formatCOP(price);
+
+      if (order.flavorId) {
+        const flavor = FoodData.getFlavorById(order.flavorId);
+        document.getElementById('previewEmoji').textContent = flavor.emoji;
+        document.getElementById('previewName').textContent  = FoodLogic.buildItemName();
+      } else {
+        document.getElementById('previewEmoji').textContent = '🍨';
+        document.getElementById('previewName').textContent  = 'Aún no eliges sabor';
+      }
+    }
+
+    function addToCart() {
+      const ok = FoodLogic.addCurrentToCart();
+      if (ok) {
+        document.querySelectorAll('.food-flavor, .food-topping').forEach(el => el.classList.remove('selected'));
+        document.querySelectorAll('.food-size-btn').forEach(el => {
+          el.classList.toggle('selected', el.dataset.size === 's02');
+        });
+        refreshLive();
+        refreshCart();
+      }
+    }
+
+    function refreshCart() {
+      document.getElementById('cartCount').textContent = Rakon.cart.count();
+    }
+
+    function openCart() {
+      if (Rakon.cart.count() === 0) {
+        Rakon.toast('info', 'Tu carrito está vacío');
+        return;
+      }
+
+      const itemsHTML = Rakon.cart.items.map((it, i) => `
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-bottom:1px solid #eee;">
+          <div style="text-align:left; flex:1;">
+            <div style="font-weight:600; font-size:14px;">${it.name}</div>
+            <div style="font-size:12px; color:#888;">${Rakon.formatCOP(it.price)}</div>
+          </div>
+          <button onclick="FoodView.removeFromCart(${i})" style="background:#FDE8E8; color:#E89B7D; border:none; border-radius:8px; padding:6px 10px; cursor:pointer; font-size:12px;">Quitar</button>
+        </div>
+      `).join('');
+
+      const totalHTML = `
+        <div style="margin-top:16px; padding-top:16px; border-top:2px solid #F0E4DC; display:flex; justify-content:space-between; font-weight:bold; font-size:18px;">
+          <span>TOTAL</span>
+          <span style="color:#E89B7D;">${Rakon.formatCOP(Rakon.cart.total())}</span>
+        </div>
+      `;
+
+      Rakon.alertHTML('Tu Pedido', itemsHTML + totalHTML, 'Enviar por WhatsApp')
+        .then(result => {
+          if (result.isConfirmed) FoodLogic.checkoutWhatsApp();
+        });
+    }
+
+    function removeFromCart(index) {
+      Rakon.cart.remove(index);
+      refreshCart();
+      Swal.close();
+      setTimeout(() => openCart(), 200);
+    }
+
+    return {
+      init:           init,
+      pickFlavor:     pickFlavor,
+      pickSize:       pickSize,
+      pickTopping:    pickTopping,
+      addToCart:      addToCart,
+      openCart:       openCart,
+      removeFromCart: removeFromCart,
+      refreshCart:    refreshCart
+    };
+  })();
+
+  document.addEventListener('DOMContentLoaded', FoodView.init);
+  </script>
+
+</body>
+</html>

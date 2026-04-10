@@ -1,0 +1,123 @@
+<!--
+  ============================================================
+  RAKON TECHNOLOGY — FOOD LOGIC
+  Archivo: 02_FOOD/FoodLogic.html
+  Responsabilidad: Reglas de negocio del vertical heladería.
+                   Constructor de pedido, cálculo, checkout.
+  ============================================================
+-->
+<script>
+window.FoodLogic = (function() {
+
+  let currentOrder = {
+    flavorId:   null,
+    sizeId:     's02',
+    toppingIds: []
+  };
+
+  function reset() {
+    currentOrder = { flavorId: null, sizeId: 's02', toppingIds: [] };
+  }
+
+  function selectFlavor(flavorId) {
+    currentOrder.flavorId = flavorId;
+  }
+
+  function selectSize(sizeId) {
+    currentOrder.sizeId = sizeId;
+  }
+
+  function toggleTopping(toppingId) {
+    const idx = currentOrder.toppingIds.indexOf(toppingId);
+    if (idx >= 0) {
+      currentOrder.toppingIds.splice(idx, 1);
+    } else {
+      currentOrder.toppingIds.push(toppingId);
+    }
+  }
+
+  function calculatePrice() {
+    if (!currentOrder.flavorId) return 0;
+
+    const flavor = FoodData.getFlavorById(currentOrder.flavorId);
+    const size   = FoodData.getSizeById(currentOrder.sizeId);
+
+    let total = flavor.basePrice * size.multiplier;
+
+    currentOrder.toppingIds.forEach(tid => {
+      const t = FoodData.getToppingById(tid);
+      if (t) total += t.price;
+    });
+
+    return Math.round(total);
+  }
+
+  function buildItemName() {
+    if (!currentOrder.flavorId) return '';
+    const flavor = FoodData.getFlavorById(currentOrder.flavorId);
+    const size   = FoodData.getSizeById(currentOrder.sizeId);
+
+    const toppingNames = currentOrder.toppingIds
+      .map(tid => FoodData.getToppingById(tid).name)
+      .join(', ');
+
+    let name = size.name + ' · ' + flavor.name;
+    if (toppingNames) name += ' + ' + toppingNames;
+    return name;
+  }
+
+  function addCurrentToCart() {
+    if (!currentOrder.flavorId) {
+      Rakon.toast('error', 'Elige un sabor primero');
+      return false;
+    }
+
+    const item = {
+      name:  buildItemName(),
+      price: calculatePrice(),
+      data:  JSON.parse(JSON.stringify(currentOrder))
+    };
+
+    Rakon.cart.add(item);
+    reset();
+    return true;
+  }
+
+  function checkoutWhatsApp() {
+    if (Rakon.cart.count() === 0) {
+      Rakon.toast('error', 'Tu carrito está vacío');
+      return;
+    }
+
+    const summary = Rakon.cart.summaryText();
+    const message =
+      '🍦 NUEVO PEDIDO — ' + FoodData.brand.name + '\n\n' +
+      summary + '\n\n' +
+      'Confirmo este pedido. ¿Tiempo de entrega?';
+
+    Rakon.alertConfirm(
+      'Confirmar Pedido',
+      'Total: ' + Rakon.formatCOP(Rakon.cart.total()) + ' · ' + Rakon.cart.count() + ' productos',
+      'Enviar por WhatsApp'
+    ).then(result => {
+      if (result.isConfirmed) {
+        Rakon.sendToWhatsApp(message);
+        Rakon.cart.clear();
+        if (typeof FoodView !== 'undefined' && FoodView.refreshCart) FoodView.refreshCart();
+      }
+    });
+  }
+
+  return {
+    get currentOrder()  { return currentOrder; },
+    reset:               reset,
+    selectFlavor:        selectFlavor,
+    selectSize:          selectSize,
+    toggleTopping:       toggleTopping,
+    calculatePrice:      calculatePrice,
+    buildItemName:       buildItemName,
+    addCurrentToCart:    addCurrentToCart,
+    checkoutWhatsApp:    checkoutWhatsApp
+  };
+})();
+</script>

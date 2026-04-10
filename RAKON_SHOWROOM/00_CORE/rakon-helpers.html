@@ -1,0 +1,128 @@
+<!--
+  ============================================================
+  RAKON TECHNOLOGY — HELPERS JS
+  Archivo: 00_CORE/rakon-helpers.html
+  Responsabilidad: Utilidades cliente reutilizables.
+  ============================================================
+-->
+<script>
+window.Rakon = (function() {
+
+  const CONFIG = {
+    whatsapp: '573026313969',
+    brand:    'RAKON Technology'
+  };
+
+  function formatCOP(value) {
+    const num = Number(value) || 0;
+    return new Intl.NumberFormat('es-CO', {
+      style: 'currency',
+      currency: 'COP',
+      maximumFractionDigits: 0
+    }).format(num);
+  }
+
+  function whatsappLink(message) {
+    const encoded = encodeURIComponent(message || 'Hola, vengo del demo Rakon.');
+    return 'https://wa.me/' + CONFIG.whatsapp + '?text=' + encoded;
+  }
+
+  function sendToWhatsApp(message) {
+    window.open(whatsappLink(message), '_blank');
+  }
+
+  function toast(icon, title) {
+    Swal.fire({
+      toast: true,
+      position: 'top-end',
+      icon: icon,
+      title: title,
+      showConfirmButton: false,
+      timer: 2200,
+      timerProgressBar: true,
+      customClass: { popup: 'rakon-swal' }
+    });
+  }
+
+  function alertSuccess(title, text) {
+    return Swal.fire({
+      icon: 'success',
+      title: title,
+      text: text,
+      customClass: { popup: 'rakon-swal' },
+      confirmButtonText: 'Entendido'
+    });
+  }
+
+  function alertConfirm(title, text, confirmText) {
+    return Swal.fire({
+      icon: 'question',
+      title: title,
+      text: text,
+      showCancelButton: true,
+      confirmButtonText: confirmText || 'Confirmar',
+      cancelButtonText: 'Cancelar',
+      customClass: { popup: 'rakon-swal' }
+    });
+  }
+
+  function alertHTML(title, html, confirmText) {
+    return Swal.fire({
+      title: title,
+      html: html,
+      showCancelButton: true,
+      confirmButtonText: confirmText || 'Enviar pedido',
+      cancelButtonText: 'Seguir comprando',
+      customClass: { popup: 'rakon-swal' },
+      width: 540
+    });
+  }
+
+  const cart = {
+    items: [],
+
+    add(item) {
+      this.items.push(item);
+      toast('success', item.name + ' agregado');
+    },
+
+    remove(index) {
+      this.items.splice(index, 1);
+    },
+
+    clear() {
+      this.items = [];
+    },
+
+    total() {
+      return this.items.reduce((sum, it) => sum + (Number(it.price) || 0), 0);
+    },
+
+    count() {
+      return this.items.length;
+    },
+
+    summaryText() {
+      if (this.items.length === 0) return 'Carrito vacío';
+      const lines = this.items.map((it, i) =>
+        (i + 1) + '. ' + it.name + ' — ' + formatCOP(it.price)
+      );
+      lines.push('');
+      lines.push('TOTAL: ' + formatCOP(this.total()));
+      return lines.join('\n');
+    }
+  };
+
+  return {
+    config:         CONFIG,
+    formatCOP:      formatCOP,
+    whatsappLink:   whatsappLink,
+    sendToWhatsApp: sendToWhatsApp,
+    toast:          toast,
+    alertSuccess:   alertSuccess,
+    alertConfirm:   alertConfirm,
+    alertHTML:      alertHTML,
+    cart:           cart
+  };
+})();
+</script>

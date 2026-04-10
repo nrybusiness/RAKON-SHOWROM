@@ -1,0 +1,149 @@
+<!--
+  ============================================================
+  RAKON TECHNOLOGY — BASE LAYER
+  Archivo: 00_CORE/rakon-base.html
+  Responsabilidad: CDNs + clases utilitarias de marca.
+  ============================================================
+-->
+
+<!-- CDN: Tailwind -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- CDN: SweetAlert2 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+  /* === COMPONENTES UTILITARIOS RAKON === */
+
+  .rakon-display {
+    font-family: var(--rakon-font-display);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+  }
+
+  .rakon-mono {
+    font-family: var(--rakon-font-mono);
+    letter-spacing: -0.01em;
+  }
+
+  /* Botones */
+  .rakon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.85rem 1.6rem;
+    border-radius: var(--rakon-radius-md);
+    font-family: var(--rakon-font-display);
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    transition: transform var(--rakon-fast), box-shadow var(--rakon-fast), background var(--rakon-fast);
+    border: none;
+    text-decoration: none;
+  }
+
+  .rakon-btn-primary {
+    background: var(--rakon-brand);
+    color: var(--rakon-black);
+  }
+  .rakon-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--rakon-glow-gold);
+  }
+
+  .rakon-btn-ghost {
+    background: transparent;
+    color: var(--rakon-text);
+    border: 1px solid var(--rakon-border);
+  }
+  .rakon-btn-ghost:hover {
+    border-color: var(--rakon-brand);
+    color: var(--rakon-brand);
+  }
+
+  .rakon-btn-cyan {
+    background: var(--rakon-accent);
+    color: var(--rakon-black);
+  }
+  .rakon-btn-cyan:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--rakon-glow-cyan);
+  }
+
+  /* Cards */
+  .rakon-card {
+    background: var(--rakon-bg-elevated);
+    border: 1px solid var(--rakon-border);
+    border-radius: var(--rakon-radius-lg);
+    transition: transform var(--rakon-medium), border-color var(--rakon-medium), box-shadow var(--rakon-medium);
+  }
+  .rakon-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--rakon-brand);
+    box-shadow: var(--rakon-shadow-lg);
+  }
+
+  /* Chip / Badge */
+  .rakon-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    font-family: var(--rakon-font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    background: rgba(201, 162, 39, 0.1);
+    color: var(--rakon-brand);
+    border: 1px solid var(--rakon-border);
+  }
+
+  /* Grid pattern de fondo (estética tech) */
+  .rakon-grid-bg {
+    background-image:
+      linear-gradient(rgba(201, 162, 39, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201, 162, 39, 0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: var(--rakon-black-soft); }
+  ::-webkit-scrollbar-thumb { background: var(--rakon-border); border-radius: 999px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--rakon-brand); }
+
+  /* SweetAlert2 — tematización Rakon */
+  .swal2-popup.rakon-swal {
+    background: var(--rakon-bg-elevated) !important;
+    color: var(--rakon-text) !important;
+    border: 1px solid var(--rakon-border) !important;
+    border-radius: var(--rakon-radius-lg) !important;
+    font-family: var(--rakon-font-body) !important;
+  }
+  .swal2-popup.rakon-swal .swal2-title {
+    color: var(--rakon-brand) !important;
+    font-family: var(--rakon-font-display) !important;
+  }
+  .swal2-popup.rakon-swal .swal2-confirm {
+    background: var(--rakon-brand) !important;
+    color: var(--rakon-black) !important;
+    font-weight: 600 !important;
+    border-radius: var(--rakon-radius-md) !important;
+  }
+  .swal2-popup.rakon-swal .swal2-cancel {
+    background: transparent !important;
+    color: var(--rakon-text) !important;
+    border: 1px solid var(--rakon-border) !important;
+    border-radius: var(--rakon-radius-md) !important;
+  }
+</style>

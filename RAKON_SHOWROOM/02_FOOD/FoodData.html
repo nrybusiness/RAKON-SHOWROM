@@ -1,0 +1,50 @@
+<!--
+  ============================================================
+  RAKON TECHNOLOGY — FOOD DATA (MOCK)
+  Archivo: 02_FOOD/FoodData.html
+  Responsabilidad: Catálogo de sabores, toppings y combos.
+                   Firma idéntica al adapter real (Sheets).
+  ============================================================
+-->
+<script>
+window.FoodData = {
+
+  brand: {
+    name:    'Gelateria Demo',
+    tagline: 'Helado artesanal · Toppings ilimitados',
+    color:   '#F4C2C2'
+  },
+
+  flavors: [
+    { id: 'f01', name: 'Vainilla Madagascar', emoji: '🍦', basePrice: 8000, tag: 'Clásico' },
+    { id: 'f02', name: 'Chocolate Belga',     emoji: '🍫', basePrice: 9000, tag: 'Premium' },
+    { id: 'f03', name: 'Fresa Natural',       emoji: '🍓', basePrice: 8500, tag: 'Frutal' },
+    { id: 'f04', name: 'Pistacho Siciliano',  emoji: '🌰', basePrice: 11000, tag: 'Premium' },
+    { id: 'f05', name: 'Mango Biche',         emoji: '🥭', basePrice: 9500, tag: 'Frutal' },
+    { id: 'f06', name: 'Cookies & Cream',     emoji: '🍪', basePrice: 9500, tag: 'Clásico' },
+    { id: 'f07', name: 'Café Espresso',       emoji: '☕', basePrice: 9000, tag: 'Adulto' },
+    { id: 'f08', name: 'Maracuyá',            emoji: '💛', basePrice: 9500, tag: 'Frutal' }
+  ],
+
+  toppings: [
+    { id: 't01', name: 'Chips de Chocolate', price: 1500, emoji: '🍫' },
+    { id: 't02', name: 'Salsa de Caramelo',  price: 1200, emoji: '🍯' },
+    { id: 't03', name: 'Galleta Oreo',       price: 1800, emoji: '🍪' },
+    { id: 't04', name: 'Frutos Rojos',       price: 2500, emoji: '🫐' },
+    { id: 't05', name: 'Crema Chantilly',    price: 1000, emoji: '☁️' },
+    { id: 't06', name: 'Maní Tostado',       price: 1500, emoji: '🥜' },
+    { id: 't07', name: 'M&M\'s',             price: 2000, emoji: '🔴' },
+    { id: 't08', name: 'Brownie Trozos',     price: 2800, emoji: '🟫' }
+  ],
+
+  sizes: [
+    { id: 's01', name: 'Mini',    multiplier: 0.7, label: '1 bola' },
+    { id: 's02', name: 'Regular', multiplier: 1.0, label: '2 bolas' },
+    { id: 's03', name: 'Grande',  multiplier: 1.5, label: '3 bolas' }
+  ],
+
+  getFlavorById(id)  { return this.flavors.find(f  => f.id === id);  },
+  getToppingById(id) { return this.toppings.find(t => t.id === id); },
+  getSizeById(id)    { return this.sizes.find(s    => s.id === id);    }
+};
+</script>

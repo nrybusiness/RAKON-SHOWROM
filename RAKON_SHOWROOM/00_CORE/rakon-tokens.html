@@ -1,0 +1,63 @@
+<!--
+  ============================================================
+  RAKON TECHNOLOGY — DESIGN TOKENS
+  Archivo: 00_CORE/rakon-tokens.html
+  Responsabilidad: Variables CSS de marca. Paleta única.
+  ============================================================
+-->
+<style>
+  :root {
+    /* === PALETA RAKON === */
+    --rakon-black:      #0A0A0A;
+    --rakon-black-soft: #141414;
+    --rakon-black-card: #1C1C1C;
+    --rakon-gold:       #C9A227;
+    --rakon-gold-soft:  #E8C158;
+    --rakon-bone:       #F5F1E8;
+    --rakon-bone-dim:   #B8B4AB;
+    --rakon-cyan:       #00E0FF;
+    --rakon-cyan-soft:  #66ECFF;
+    --rakon-danger:     #FF3B5C;
+    --rakon-success:    #2ECC71;
+
+    /* === ALIAS SEMÁNTICOS === */
+    --rakon-bg:           var(--rakon-black);
+    --rakon-bg-elevated:  var(--rakon-black-card);
+    --rakon-text:         var(--rakon-bone);
+    --rakon-text-dim:     var(--rakon-bone-dim);
+    --rakon-brand:        var(--rakon-gold);
+    --rakon-accent:       var(--rakon-cyan);
+    --rakon-border:       rgba(201, 162, 39, 0.18);
+
+    /* === TIPOGRAFÍA === */
+    --rakon-font-display: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+    --rakon-font-body:    'Inter', system-ui, -apple-system, sans-serif;
+    --rakon-font-mono:    'JetBrains Mono', 'Courier New', monospace;
+
+    /* === ESCALA === */
+    --rakon-radius-sm: 6px;
+    --rakon-radius-md: 12px;
+    --rakon-radius-lg: 20px;
+    --rakon-radius-xl: 28px;
+
+    /* === SOMBRAS === */
+    --rakon-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+    --rakon-shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
+    --rakon-shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.6);
+    --rakon-glow-gold: 0 0 24px rgba(201, 162, 39, 0.35);
+    --rakon-glow-cyan: 0 0 24px rgba(0, 224, 255, 0.4);
+
+    /* === TRANSICIONES === */
+    --rakon-ease:    cubic-bezier(0.22, 1, 0.36, 1);
+    --rakon-fast:    160ms var(--rakon-ease);
+    --rakon-medium:  280ms var(--rakon-ease);
+    --rakon-slow:    480ms var(--rakon-ease);
+  }
+
+  html, body {
+    background: var(--rakon-bg);
+    color: var(--rakon-text);
+    font-family: var(--rakon-font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+</style>

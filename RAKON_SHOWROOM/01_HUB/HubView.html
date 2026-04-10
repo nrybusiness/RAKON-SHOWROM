@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RAKON Technology — Infraestructura Digital</title>
+  <?!= include('rakon-tokens'); ?>
+  <?!= include('rakon-base'); ?>
+  <?!= include('rakon-helpers'); ?>
+</head>
+<body class="rakon-grid-bg">
+
+  <!-- ============ NAV ============ -->
+  <nav class="fixed top-0 left-0 right-0 z-50 backdrop-blur-md" style="background: rgba(10,10,10,0.75); border-bottom: 1px solid var(--rakon-border);">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg flex items-center justify-center" style="background: var(--rakon-brand);">
+          <span class="rakon-display text-lg" style="color: var(--rakon-black);">R</span>
+        </div>
+        <div>
+          <div class="rakon-display text-base">RAKON</div>
+          <div class="rakon-mono text-[10px]" style="color: var(--rakon-text-dim);">TECHNOLOGY</div>
+        </div>
+      </div>
+      <div class="hidden md:flex items-center gap-6 text-sm">
+        <a href="#showroom" style="color: var(--rakon-text-dim);" class="hover:text-white transition">Showroom</a>
+        <a href="#creative" style="color: var(--rakon-text-dim);" class="hover:text-white transition">Creative</a>
+        <a href="#modelo" style="color: var(--rakon-text-dim);" class="hover:text-white transition">Modelo</a>
+        <button class="rakon-btn rakon-btn-primary" onclick="contactarRakon()">Cotizar</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ============ HERO ============ -->
+  <section class="pt-32 pb-24 px-6">
+    <div class="max-w-7xl mx-auto">
+      <div class="rakon-chip mb-6">// SISTEMA OPERATIVO COMERCIAL · ELA_OS</div>
+      <h1 class="rakon-display text-5xl md:text-7xl mb-6 max-w-4xl">
+        Infraestructura Digital para Negocios que <span style="color: var(--rakon-brand);">Quieren Escalar</span>.
+      </h1>
+      <p class="text-lg md:text-xl max-w-2xl mb-10" style="color: var(--rakon-text-dim);">
+        No hacemos páginas web. Automatizamos tus ventas, controlamos tu inventario y eliminamos errores operativos.
+      </p>
+      <div class="flex flex-wrap gap-4">
+        <a href="#showroom" class="rakon-btn rakon-btn-primary">
+          Ver Simuladores en Vivo →
+        </a>
+        <button class="rakon-btn rakon-btn-ghost" onclick="contactarRakon()">
+          Hablar con Ingeniería
+        </button>
+      </div>
+
+      <!-- Métricas -->
+      <div class="mt-20 grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div>
+          <div class="rakon-display text-4xl" style="color: var(--rakon-brand);">04</div>
+          <div class="rakon-mono text-xs mt-2" style="color: var(--rakon-text-dim);">VERTICALES ACTIVOS</div>
+        </div>
+        <div>
+          <div class="rakon-display text-4xl" style="color: var(--rakon-brand);">24/7</div>
+          <div class="rakon-mono text-xs mt-2" style="color: var(--rakon-text-dim);">SAAS UPTIME</div>
+        </div>
+        <div>
+          <div class="rakon-display text-4xl" style="color: var(--rakon-brand);">∞</div>
+          <div class="rakon-mono text-xs mt-2" style="color: var(--rakon-text-dim);">ESCALABILIDAD</div>
+        </div>
+        <div>
+          <div class="rakon-display text-4xl" style="color: var(--rakon-brand);">0</div>
+          <div class="rakon-mono text-xs mt-2" style="color: var(--rakon-text-dim);">ERRORES MANUALES</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SHOWROOM ============ -->
+  <section id="showroom" class="py-24 px-6" style="background: var(--rakon-black-soft);">
+    <div class="max-w-7xl mx-auto">
+      <div class="rakon-chip mb-4">// SHOWROOM ELA_OS</div>
+      <h2 class="rakon-display text-4xl md:text-5xl mb-4">Simuladores en Vivo.</h2>
+      <p class="text-lg mb-12 max-w-2xl" style="color: var(--rakon-text-dim);">
+        Cada ficha es una pieza de infraestructura real. Click, prueba, rompe — está hecho para venderte.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <!-- FOOD -->
+        <div class="rakon-card p-8 cursor-pointer" onclick="abrirDemo('food')">
+          <div class="flex items-start justify-between mb-6">
+            <div class="rakon-chip">01 · GASTRONOMÍA</div>
+            <div class="rakon-mono text-xs" style="color: var(--rakon-text-dim);">[ ACTIVO ]</div>
+          </div>
+          <div class="text-5xl mb-4">🍦</div>
+          <h3 class="rakon-display text-2xl mb-3">Food &amp; Treats</h3>
+          <p class="text-sm mb-6" style="color: var(--rakon-text-dim);">
+            Heladerías, postres, delivery. Selector visual de toppings, carrito instantáneo y cierre por WhatsApp.
+          </p>
+          <div class="flex items-center justify-between">
+            <span class="rakon-mono text-xs" style="color: var(--rakon-brand);">PROBAR DEMO →</span>
+            <span class="rakon-mono text-xs" style="color: var(--rakon-text-dim);">v1.0</span>
+          </div>
+        </div>
+
+        <!-- SERVICES -->
+        <div class="rakon-card p-8 cursor-pointer" onclick="proximamente('Servicios Profesionales')">
+          <div class="flex items-start justify-between mb-6">
+            <div class="rakon-chip">02 · SERVICIOS</div>
+            <div class="rakon-mono text-xs" style="color: var(--rakon-text-dim);">[ EN COLA ]</div>
+          </div>
+          <div class="text-5xl mb-4">💈</div>
+          <h3 class="rakon-display text-2xl mb-3">Servicios Profesionales</h3>
+          <p class="text-sm mb-6" style="color: var(--rakon-text-dim);">
+            Barberías, spas, consultorios. Calendario interactivo. Tu agenda se llena sola mientras tú trabajas.
+          </p>
+          <div class="flex items-center justify-between">
+            <span class="rakon-mono text-xs" style="color: var(--rakon-brand);">VER FICHA →</span>
+            <span class="rakon-mono text-xs" style="color: var(--rakon-text-dim);">v0.0</span>
+          </div>
+        </div>
+
+        <!-- RETAIL -->
+        <div class="rakon-card p-8 cursor-pointer" onclick="proximamente('Retail &amp; Moda')">
+          <div class="flex items-start justify-between mb-6">
+            <div class="rakon-chip">03 · RETAIL</div>
+            <div class="rakon-mono text-xs" style="color: var(--rakon-text-dim);">[ EN COLA ]</div>
+          </div>
+          <div class="text-5xl mb-4">👗</div>
+          <h3 class="rakon-display text-2xl mb-3">Retail &amp; Moda</h3>
+          <p class="text-sm mb-6" style="color: var(--rakon-text-dim);">
+            Boutiques, accesorios. Convierte tu Instagram en una tienda real con inventario que se descuenta solo.
+          </p>
+          <div class="flex items-center justify-between">
+            <span class="rakon-mono text-xs" style="color: var(--rakon-brand);">VER FICHA →</span>
+            <span class="rakon-mono text-xs" style="color: var(--rakon-text-dim);">v0.0</span>
+          </div>
+        </div>
+
+        <!-- OPS -->
+        <div class="rakon-card p-8 cursor-pointer" onclick="proximamente('Gestión Operativa')">
+          <div class="flex items-start justify-between mb-6">
+            <div class="rakon-chip">04 · OPERACIONES</div>
+            <div class="rakon-mono text-xs" style="color: var(--rakon-text-dim);">[ EN COLA ]</div>
+          </div>
+          <div class="text-5xl mb-4">🔧</div>
+          <h3 class="rakon-display text-2xl mb-3">Gestión Operativa</h3>
+          <p class="text-sm mb-6" style="color: var(--rakon-text-dim);">
+            Talleres, ferreterías, lavaderos. Estado en vivo de cada orden. El cliente deja de llamarte.
+          </p>
+          <div class="flex items-center justify-between">
+            <span class="rakon-mono text-xs" style="color: var(--rakon-brand);">VER FICHA →</span>
+            <span class="rakon-mono text-xs" style="color: var(--rakon-text-dim);">v0.0</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CREATIVE ============ -->
+  <section id="creative" class="py-24 px-6">
+    <div class="max-w-7xl mx-auto">
+      <div class="rakon-chip mb-4">// RAKON CREATIVE</div>
+      <h2 class="rakon-display text-4xl md:text-5xl mb-4">Ingeniería con Estética.</h2>
+      <p class="text-lg max-w-2xl mb-12" style="color: var(--rakon-text-dim);">
+        La ingeniería no está peleada con la estética. Interfaz de usuario diseñada para retener y convertir.
+      </p>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="aspect-square rounded-2xl" style="background: linear-gradient(135deg, var(--rakon-black-card), var(--rakon-black)); border: 1px solid var(--rakon-border);"></div>
+        <div class="aspect-square rounded-2xl" style="background: linear-gradient(135deg, var(--rakon-gold), var(--rakon-black));"></div>
+        <div class="aspect-square rounded-2xl" style="background: linear-gradient(135deg, var(--rakon-black), var(--rakon-cyan));"></div>
+        <div class="aspect-square rounded-2xl" style="background: linear-gradient(135deg, var(--rakon-black-card), var(--rakon-gold-soft));"></div>
+        <div class="aspect-square rounded-2xl" style="background: linear-gradient(135deg, var(--rakon-cyan), var(--rakon-black));"></div>
+        <div class="aspect-square rounded-2xl" style="background: linear-gradient(135deg, var(--rakon-black), var(--rakon-gold));"></div>
+        <div class="aspect-square rounded-2xl" style="background: linear-gradient(135deg, var(--rakon-gold-soft), var(--rakon-black-card));"></div>
+        <div class="aspect-square rounded-2xl" style="background: linear-gradient(135deg, var(--rakon-black-soft), var(--rakon-cyan-soft));"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MODELO ============ -->
+  <section id="modelo" class="py-24 px-6" style="background: var(--rakon-black-soft);">
+    <div class="max-w-7xl mx-auto">
+      <div class="rakon-chip mb-4">// MODELO DE NEGOCIO</div>
+      <h2 class="rakon-display text-4xl md:text-5xl mb-4">Las Cartas Sobre la Mesa.</h2>
+      <p class="text-lg mb-12 max-w-2xl" style="color: var(--rakon-text-dim);">
+        Sin letra pequeña. Tres líneas de cobro, una sola promesa: que tu negocio escale.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <div class="rakon-card p-8">
+          <div class="rakon-mono text-xs mb-3" style="color: var(--rakon-brand);">01 · SETUP</div>
+          <h3 class="rakon-display text-2xl mb-3">Implementación</h3>
+          <div class="rakon-display text-3xl mb-2">desde $500K</div>
+          <p class="text-sm" style="color: var(--rakon-text-dim);">
+            Pago único. Levantamiento, configuración y puesta en producción de tu vertical ELA_OS.
+          </p>
+        </div>
+
+        <div class="rakon-card p-8" style="border-color: var(--rakon-brand);">
+          <div class="rakon-mono text-xs mb-3" style="color: var(--rakon-brand);">02 · SAAS</div>
+          <h3 class="rakon-display text-2xl mb-3">Mantenimiento</h3>
+          <div class="rakon-display text-3xl mb-2">desde $89K/mes</div>
+          <p class="text-sm" style="color: var(--rakon-text-dim);">
+            Servidores siempre activos, soporte y actualizaciones. Tu infraestructura nunca duerme.
+          </p>
+        </div>
+
+        <div class="rakon-card p-8">
+          <div class="rakon-mono text-xs mb-3" style="color: var(--rakon-brand);">03 · INGENIERÍA</div>
+          <h3 class="rakon-display text-2xl mb-3">A la Medida</h3>
+          <div class="rakon-display text-3xl mb-2">$120K/hora</div>
+          <p class="text-sm" style="color: var(--rakon-text-dim);">
+            Cotización por horas para funciones exclusivas. Construimos lo que tu negocio necesita.
+          </p>
+        </div>
+
+      </div>
+
+      <div class="mt-12 text-center">
+        <button class="rakon-btn rakon-btn-primary" onclick="contactarRakon()">
+          Solicitar Cotización por WhatsApp
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="py-12 px-6 border-t" style="border-color: var(--rakon-border);">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="rakon-mono text-xs" style="color: var(--rakon-text-dim);">
+        © 2026 RAKON TECHNOLOGY · MEDELLÍN, COLOMBIA
+      </div>
+      <div class="rakon-mono text-xs" style="color: var(--rakon-text-dim);">
+        ELA_OS v1.0 · BUILT FOR SCALE
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function abrirDemo(app) {
+      const url = window.location.pathname + '?app=' + app;
+      window.open(url, '_blank');
+    }
+
+    function proximamente(nombre) {
+      Rakon.alertSuccess(
+        nombre + ' — Próximamente',
+        'Este vertical está en cola de producción. Solicítalo por WhatsApp y lo priorizamos para tu negocio.'
+      );
+    }
+
+    function contactarRakon() {
+      const msg = 'Hola RAKON, vi el Hub y quiero cotizar infraestructura para mi negocio.';
+      Rakon.sendToWhatsApp(msg);
+    }
+  </script>
+
+</body>
+</html>
